@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Forex Position Trimming Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        input, button {
+            display: block;
+            width: 100%;
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 16px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>Forex Position Trimming Calculator</h1>
+    
+    <h2>Long Positions</h2>
+    <input type="number" id="longUnits" placeholder="Units">
+    <input type="number" id="longProfit" placeholder="Profit">
+    <input type="number" id="longKeep" placeholder="Keep">
+    <button onclick="calculateLong()">Calculate Long</button>
+    
+    <h2>Short Positions</h2>
+    <input type="number" id="shortUnits" placeholder="Units">
+    <input type="number" id="shortProfit" placeholder="Profit">
+    <input type="number" id="shortKeep" placeholder="Keep">
+    <button onclick="calculateShort()">Calculate Short</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function calculateLong() {
+            const units = parseFloat(document.getElementById('longUnits').value);
+            const profit = parseFloat(document.getElementById('longProfit').value);
+            const keep = parseFloat(document.getElementById('longKeep').value);
+            
+            const apply = profit - keep;
+            const close = units * (apply / profit);
+            const percentClosed = (close / units) * 100;
+            const lotsLeft = units - close;
+            
+            displayResult('Long', units, profit, keep, apply, close, percentClosed, lotsLeft);
+        }
+        
+        function calculateShort() {
+            const units = parseFloat(document.getElementById('shortUnits').value);
+            const profit = parseFloat(document.getElementById('shortProfit').value);
+            const keep = parseFloat(document.getElementById('shortKeep').value);
+            
+            const apply = profit - keep;
+            const close = units * (apply / profit);
+            const percentClosed = (close / units) * 100;
+            const lotsLeft = units - close;
+            
+            displayResult('Short', units, profit, keep, apply, close, percentClosed, lotsLeft);
+        }
+        
+        function displayResult(type, units, profit, keep, apply, close, percentClosed, lotsLeft) {
+            const resultHtml = `
+                <h3>${type} Position Result</h3>
+                <table>
+                    <tr>
+                        <th>Units</th>
+                        <th>Profit</th>
+                        <th>Keep</th>
+                        <th>Apply</th>
+                        <th>Close</th>
+                        <th>% Closed</th>
+                        <th>Lots Left</th>
+                    </tr>
+                    <tr>
+                        <td>${units.toFixed(2)}</td>
+                        <td>$${profit.toFixed(2)}</td>
+                        <td>$${keep.toFixed(2)}</td>
+                        <td>$${apply.toFixed(2)}</td>
+                        <td>${close.toFixed(2)}</td>
+                        <td>${percentClosed.toFixed(2)}%</td>
+                        <td>${lotsLeft.toFixed(2)}</td>
+                    </tr>
+                </table>
+            `;
+            document.getElementById('result').innerHTML += resultHtml;
+        }
+    </script>
+</body>
+</html>
